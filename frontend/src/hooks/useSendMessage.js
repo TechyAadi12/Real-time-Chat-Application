@@ -9,7 +9,7 @@ const useSendMessage = () => {
     const sendMessage = async (message) => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/messages/send/${selectedConversation._id}`, {
+            const res = await fetch(`https://real-time-chat-application-backend-n4ci.onrender.com${selectedConversation._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
