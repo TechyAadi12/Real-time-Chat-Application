@@ -20,22 +20,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const allowedOrigins = [CLIENT_URL, "http://localhost:5173", "http://localhost:3000"];
+const allowedOrigins = [
+    CLIENT_URL.replace(/\/$/, ""),
+    "http://localhost:5173",
+    "http://localhost:3000"
+];
 
 app.use(
     cors({
         origin: function (origin, callback) {
-            // allow requests with no origin (like mobile apps or curl)
             if (!origin) return callback(null, true);
-            if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === "development") {
+            const normalizedOrigin = origin.replace(/\/$/, "");
+            if (allowedOrigins.includes(normalizedOrigin) || process.env.NODE_ENV === "development") {
                 return callback(null, true);
             } else {
+                console.log("Blocked by CORS:", origin);
                 return callback(null, new Error("Not allowed by CORS"));
             }
         },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     })
 );
 
