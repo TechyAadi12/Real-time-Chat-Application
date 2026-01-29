@@ -28,16 +28,17 @@ const SearchInput = () => {
 
     return (
         <form onSubmit={handleSubmit} className='flex items-center gap-2'>
+            <label htmlFor="search-sidebar" className="sr-only">Search Conversations</label>
             <input
+                id="search-sidebar"
+                name="search"
                 type='text'
                 placeholder='Search…'
                 className='input input-bordered rounded-full'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
-            <button type='submit' className='btn btn-circle bg-sky-500 text-white'>
-                {/* <IoSearchSharp className='w-6 h-6 outline-none' /> */}
-                {/* using text for now if icon fails, but installing dependencies should work */}
+            <button type='submit' className='btn btn-circle bg-sky-500 text-white' aria-label="Search">
                 S
             </button>
         </form>

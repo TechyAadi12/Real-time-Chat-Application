@@ -23,10 +23,12 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit} className="mt-4">
                     <div>
-                        <label className="label p-2">
+                        <label htmlFor="login-username" className="label p-2">
                             <span className="text-base label-text">Username</span>
                         </label>
                         <input
+                            id="login-username"
+                            name="username"
                             type="text"
                             placeholder="Enter username"
                             className="w-full input input-bordered h-10"
@@ -38,10 +40,12 @@ const Login = () => {
                     </div>
 
                     <div className="mt-2">
-                        <label className="label">
+                        <label htmlFor="login-password" className="label">
                             <span className="text-base label-text">Password</span>
                         </label>
                         <input
+                            id="login-password"
+                            name="password"
                             type="password"
                             placeholder="Enter password"
                             className="w-full input input-bordered h-10"
@@ -62,9 +66,8 @@ const Login = () => {
                     <div className="mt-3">
                         <button
                             type="submit"
-                            className={`btn btn-block btn-sm ${
-                                loading ? "btn-disabled opacity-70" : ""
-                            }`}
+                            className={`btn btn-block btn-sm ${loading ? "btn-disabled opacity-70" : ""
+                                }`}
                             disabled={loading}
                         >
                             {loading ? (
