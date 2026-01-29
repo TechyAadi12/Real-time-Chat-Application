@@ -10,18 +10,20 @@ const useLogout = () => {
         setLoading(true);
 
         try {
-            const res = await fetch("https://real-time-chat-application-backend-n4ci.onrender.com", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include", // REQUIRED for cookies
-            });
-
-            const data = await res.json();
+            const res = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/auth/logout`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include", // REQUIRED for cookies
+                }
+            );
 
             if (!res.ok) {
-                throw new Error(data.message || data.error || "Logout failed");
+                const text = await res.text();
+                throw new Error(text || "Logout failed");
             }
         } catch (error) {
             toast.error(error.message);
