@@ -1,22 +1,32 @@
 import { useEffect, useState } from "react";
-import useConversation from "../zustand/useConversation";
 import toast from "react-hot-toast";
+import useConversation from "../zustand/useConversation";
 
 const useGetMessages = () => {
     const [loading, setLoading] = useState(false);
     const { messages, setMessages, selectedConversation } = useConversation();
 
     useEffect(() => {
+        if (!selectedConversation?._id) return;
+
         const getMessages = async () => {
             setLoading(true);
+
             try {
-                const res = await fetch(`https://real-time-chat-application-backend-n4ci.onrender.com/api/messages/${selectedConversation._id}`,
-  {
-    credentials: "include",
-  }
-);;
+                const res = await fetch(
+                    `${import.meta.env.VITE_API_URL}/api/messages/${selectedConversation._id}`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                    }
+                );
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text || "Failed to fetch messages");
+                }
+
                 const data = await res.json();
-                if (data.error) throw new Error(data.error);
                 setMessages(data);
             } catch (error) {
                 toast.error(error.message);
@@ -25,9 +35,10 @@ const useGetMessages = () => {
             }
         };
 
-        if (selectedConversation?._id) getMessages();
+        getMessages();
     }, [selectedConversation?._id, setMessages]);
 
     return { loading, messages };
 };
+
 export default useGetMessages;
