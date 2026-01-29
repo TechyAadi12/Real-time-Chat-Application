@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-dotenv.config(); // MUST be first
+dotenv.config();
 
 const connectDB = require("./config/db");
 const { app, server } = require("./socket/socket");
@@ -21,12 +21,14 @@ app.use(
     cors({
         origin: CLIENT_URL,
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 
 // Routes
 app.get("/", (req, res) => {
-    res.send("API is running...");
+    return res.status(200).json({ message: "API is running" });
 });
 
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -48,4 +50,3 @@ const startServer = async () => {
 };
 
 startServer();
-
