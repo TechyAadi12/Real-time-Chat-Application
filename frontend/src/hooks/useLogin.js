@@ -12,20 +12,24 @@ const useLogin = () => {
         setLoading(true);
 
         try {
-            const res = await fetch("https://real-time-chat-application-backend-n4ci.onrender.com", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include", // REQUIRED for cookies
-                body: JSON.stringify({ username, password }),
-            });
-
-            const data = await res.json();
+            const res = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/auth/login`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include", // REQUIRED for cookies
+                    body: JSON.stringify({ username, password }),
+                }
+            );
 
             if (!res.ok) {
-                throw new Error(data.message || data.error || "Login failed");
+                const text = await res.text();
+                throw new Error(text || "Login failed");
             }
+
+            const data = await res.json();
 
             localStorage.setItem("chat-user", JSON.stringify(data));
             setAuthUser(data);
