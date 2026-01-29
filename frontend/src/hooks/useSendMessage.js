@@ -27,7 +27,7 @@ const useSendMessage = () => {
 
             if (data) {
                 // SAFE functional update (prevents stale state bugs)
-                setMessages((prevMessages) => [...prevMessages, data]);
+                setMessages((prevMessages) => (Array.isArray(prevMessages) ? [...prevMessages, data] : [data]));
             }
         } catch (error) {
             toast.error(error.message);

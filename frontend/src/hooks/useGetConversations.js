@@ -14,7 +14,7 @@ const useGetConversations = () => {
             try {
                 const data = await safeFetch(`${import.meta.env.VITE_API_URL}/api/users`);
                 if (data) {
-                    setConversations(data);
+                    setConversations(Array.isArray(data) ? data : []);
                 }
             } catch (error) {
                 toast.error(error.message);

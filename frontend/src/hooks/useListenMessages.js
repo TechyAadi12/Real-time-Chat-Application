@@ -13,7 +13,7 @@ const useListenMessages = () => {
             newMessage.shouldShake = true;
 
             // SAFE functional update (no stale state)
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
+            setMessages((prevMessages) => (Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]));
         };
 
         socket.on("newMessage", handleNewMessage);

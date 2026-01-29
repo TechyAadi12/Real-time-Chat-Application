@@ -17,7 +17,7 @@ const useGetMessages = () => {
             try {
                 const data = await safeFetch(`${import.meta.env.VITE_API_URL}/api/messages/${selectedConversation._id}`);
                 if (data) {
-                    setMessages(data);
+                    setMessages(Array.isArray(data) ? data : []);
                 }
             } catch (error) {
                 toast.error(error.message);
