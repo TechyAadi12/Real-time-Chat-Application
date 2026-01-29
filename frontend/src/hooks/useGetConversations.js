@@ -16,7 +16,7 @@ const useGetConversations = () => {
                 // I will add this logic to backend later or mock it for now.
                 // Re-checking implementation plan: "Sidebar user list".
                 // I need a route /api/users/sidebar
-                const res = await fetch("/api/users");
+                const res = await fetch("https://real-time-chat-application-backend-n4ci.onrender.com");
                 const data = await res.json();
                 if (data.error) {
                     throw new Error(data.error);
