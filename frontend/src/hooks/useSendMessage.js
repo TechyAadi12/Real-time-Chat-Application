@@ -2,6 +2,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import useConversation from "../zustand/useConversation";
 
+import { safeFetch } from "../utils/safeFetch";
+
 const useSendMessage = () => {
     const [loading, setLoading] = useState(false);
     const { setMessages, selectedConversation } = useConversation();
@@ -12,27 +14,21 @@ const useSendMessage = () => {
         setLoading(true);
 
         try {
-            const res = await fetch(
+            const data = await safeFetch(
                 `${import.meta.env.VITE_API_URL}/api/messages/${selectedConversation._id}`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    credentials: "include", // REQUIRED for cookies
                     body: JSON.stringify({ message }),
                 }
             );
 
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error(text || "Failed to send message");
+            if (data) {
+                // SAFE functional update (prevents stale state bugs)
+                setMessages((prevMessages) => [...prevMessages, data]);
             }
-
-            const data = await res.json();
-
-            // SAFE functional update (prevents stale state bugs)
-            setMessages((prevMessages) => [...prevMessages, data]);
         } catch (error) {
             toast.error(error.message);
         } finally {

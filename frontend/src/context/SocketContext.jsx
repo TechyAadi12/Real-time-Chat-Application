@@ -15,14 +15,12 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         if (authUser) {
-            const socket = io("https://real-time-chat-application-backend-n4ci.onrender.com",
-  {
-    query: {
-      userId: authUser._id,
-    },
-    withCredentials: true,
-  }
-);
+            const socket = io(import.meta.env.VITE_API_URL, {
+                query: {
+                    userId: authUser._id,
+                },
+                withCredentials: true,
+            });
 
 
             setSocket(socket);

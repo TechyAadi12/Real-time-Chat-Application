@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import useConversation from "../zustand/useConversation";
 
+import { safeFetch } from "../utils/safeFetch";
+
 const useGetMessages = () => {
     const [loading, setLoading] = useState(false);
     const { messages, setMessages, selectedConversation } = useConversation();
@@ -13,21 +15,10 @@ const useGetMessages = () => {
             setLoading(true);
 
             try {
-                const res = await fetch(
-                    `${import.meta.env.VITE_API_URL}/api/messages/${selectedConversation._id}`,
-                    {
-                        method: "GET",
-                        credentials: "include",
-                    }
-                );
-
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(text || "Failed to fetch messages");
+                const data = await safeFetch(`${import.meta.env.VITE_API_URL}/api/messages/${selectedConversation._id}`);
+                if (data) {
+                    setMessages(data);
                 }
-
-                const data = await res.json();
-                setMessages(data);
             } catch (error) {
                 toast.error(error.message);
             } finally {
