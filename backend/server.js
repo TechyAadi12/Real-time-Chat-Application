@@ -31,7 +31,13 @@ app.use(
         origin: function (origin, callback) {
             if (!origin) return callback(null, true);
             const normalizedOrigin = origin.replace(/\/$/, "");
-            if (allowedOrigins.includes(normalizedOrigin) || process.env.NODE_ENV === "development") {
+
+            // Allow if in list, if local, or if it's any render subdomain
+            if (
+                allowedOrigins.includes(normalizedOrigin) ||
+                normalizedOrigin.endsWith(".onrender.com") ||
+                process.env.NODE_ENV === "development"
+            ) {
                 return callback(null, true);
             } else {
                 console.log("Blocked by CORS:", origin);
