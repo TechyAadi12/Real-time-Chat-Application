@@ -53,7 +53,7 @@ const signup = async (req, res) => {
             profilePic: newUser.profilePic,
         });
     } catch (error) {
-        console.error("Error in signup controller:", error.message);
+        console.error("Error in signup controller:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
@@ -71,7 +71,7 @@ const login = async (req, res) => {
             return res.status(400).json({ error: "Username and password are required" });
         }
 
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).select("+password");
 
         // IMPORTANT: check user first
         if (!user) {
@@ -92,7 +92,7 @@ const login = async (req, res) => {
             profilePic: user.profilePic,
         });
     } catch (error) {
-        console.error("Error in login controller:", error.message);
+        console.error("Error in login controller:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
@@ -111,7 +111,7 @@ const logout = (req, res) => {
 
         return res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
-        console.error("Error in logout controller:", error.message);
+        console.error("Error in logout controller:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
