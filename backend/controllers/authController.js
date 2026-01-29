@@ -107,6 +107,8 @@ const logout = (req, res) => {
         res.cookie("jwt", "", {
             httpOnly: true,
             expires: new Date(0),
+            sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
+            secure: process.env.NODE_ENV !== "development",
         });
 
         return res.status(200).json({ message: "Logged out successfully" });
