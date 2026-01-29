@@ -8,23 +8,22 @@ const useGetConversations = () => {
     useEffect(() => {
         const getConversations = async () => {
             setLoading(true);
+
             try {
-                // Since we need to get users to chat with (sidebar), we can hit /api/users
-                // Wait, I didn't create /api/users route in backend yet!
-                // I created /api/auth and /api/messages
-                // I need a user controller to get all users for sidebar (except self).
-                // I will add this logic to backend later or mock it for now.
-                // Re-checking implementation plan: "Sidebar user list".
-                // I need a route /api/users/sidebar
-                const res = await fetch("https://real-time-chat-application-backend-n4ci.onrender.com/api/messages/CONVERSATION_ID",
-  {
-    credentials: "include",
-  }
-);;
-                const data = await res.json();
-                if (data.error) {
-                    throw new Error(data.error);
+                const res = await fetch(
+                    `${import.meta.env.VITE_API_URL}/api/users`,
+                    {
+                        method: "GET",
+                        credentials: "include", // REQUIRED for auth cookies
+                    }
+                );
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text || "Failed to fetch conversations");
                 }
+
+                const data = await res.json();
                 setConversations(data);
             } catch (error) {
                 toast.error(error.message);
@@ -38,4 +37,6 @@ const useGetConversations = () => {
 
     return { loading, conversations };
 };
+
 export default useGetConversations;
+
