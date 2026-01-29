@@ -12,7 +12,7 @@ const useLogin = () => {
         setLoading(true);
 
         try {
-            const res = await fetch("/api/auth/login", {
+            const res = await fetch("https://real-time-chat-application-backend-n4ci.onrender.com", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
