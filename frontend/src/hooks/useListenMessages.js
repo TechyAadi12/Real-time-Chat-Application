@@ -10,10 +10,11 @@ const useListenMessages = () => {
         if (!socket) return;
 
         const handleNewMessage = (newMessage) => {
-            newMessage.shouldShake = true;
-
-            // SAFE functional update (no stale state)
-            setMessages((prevMessages) => (Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]));
+            const selectedConversation = useConversation.getState().selectedConversation;
+            if (selectedConversation?._id === newMessage.senderId) {
+                newMessage.shouldShake = true;
+                setMessages((prevMessages) => (Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]));
+            }
         };
 
         socket.on("newMessage", handleNewMessage);
