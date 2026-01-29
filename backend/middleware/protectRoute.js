@@ -3,10 +3,20 @@ const User = require("../models/User.js");
 
 const protectRoute = async (req, res, next) => {
     try {
-        const token = req.cookies?.jwt || (req.headers.cookie ? req.headers.cookie.split('jwt=')[1]?.split(';')[0] : null);
+        let token = req.cookies?.jwt;
+
+        // Fallback 1: Bearer Token
+        if (!token && req.headers.authorization?.startsWith("Bearer")) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+
+        // Fallback 2: Raw Header
+        if (!token && req.headers.cookie) {
+            token = req.headers.cookie.split('jwt=')[1]?.split(';')[0];
+        }
 
         if (!token) {
-            console.log("No token in cookies. Raw Cookie Header:", req.headers.cookie);
+            console.log("No token found. Headers:", req.headers);
             return res.status(401).json({
                 error: "Unauthorized - No Token Provided",
             });

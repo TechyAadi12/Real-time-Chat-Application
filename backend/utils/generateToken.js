@@ -5,16 +5,16 @@ const generateTokenAndSetCookie = (userId, res) => {
         expiresIn: "15d",
     });
 
-    // Determine if we are in production-like environment (Render, etc)
-    // Default to true security if not explicitly localhost development
     const isLocalhost = process.env.NODE_ENV === "development";
 
     res.cookie("jwt", token, {
         maxAge: 15 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: isLocalhost ? "lax" : "none",
-        secure: !isLocalhost, // must be true for sameSite: "none"
+        secure: !isLocalhost,
     });
+
+    return token; // Return token for JSON fallback
 };
 
 module.exports = generateTokenAndSetCookie;

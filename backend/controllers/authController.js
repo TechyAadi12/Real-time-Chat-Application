@@ -44,13 +44,14 @@ const signup = async (req, res) => {
         await newUser.save();
 
         // Generate token AFTER successful save
-        generateTokenAndSetCookie(newUser._id, res);
+        const token = generateTokenAndSetCookie(newUser._id, res);
 
         return res.status(201).json({
             _id: newUser._id,
             fullName: newUser.fullName,
             username: newUser.username,
             profilePic: newUser.profilePic,
+            token,
         });
     } catch (error) {
         console.error("Error in signup controller:", error);
@@ -83,13 +84,14 @@ const login = async (req, res) => {
             return res.status(400).json({ error: "Invalid username or password" });
         }
 
-        generateTokenAndSetCookie(user._id, res);
+        const token = generateTokenAndSetCookie(user._id, res);
 
         return res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
             username: user.username,
             profilePic: user.profilePic,
+            token,
         });
     } catch (error) {
         console.error("Error in login controller:", error);

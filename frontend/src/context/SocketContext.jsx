@@ -20,6 +20,9 @@ export const SocketContextProvider = ({ children }) => {
                     userId: authUser._id,
                 },
                 withCredentials: true,
+                extraHeaders: {
+                    Authorization: authUser.token ? `Bearer ${authUser.token}` : "",
+                }
             });
 
 

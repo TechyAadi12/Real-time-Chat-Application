@@ -10,11 +10,16 @@ export const safeFetch = async (url, options = {}) => {
 		credentials: "include", // Required for authentication cookies
 	};
 
+	// Get token from localStorage (fallback for blocked cookies)
+	const authUser = JSON.parse(localStorage.getItem("chat-user"));
+	const token = authUser?.token;
+
 	const mergedOptions = {
 		...defaultOptions,
 		...options,
 		headers: {
 			...options.headers,
+			...(token ? { "Authorization": `Bearer ${token}` } : {}),
 		},
 	};
 
@@ -38,7 +43,7 @@ export const safeFetch = async (url, options = {}) => {
 	const contentType = response.headers.get("content-type");
 	if (contentType && contentType.includes("application/json")) {
 		const text = await response.text();
-		
+
 		// Handle empty bodies safely
 		if (!text || text.trim() === "") {
 			return null;
