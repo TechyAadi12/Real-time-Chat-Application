@@ -1,6 +1,6 @@
 import { useState } from "react";
-import useAuthStore from "../zustand/useAuthStore";
 import toast from "react-hot-toast";
+import useAuthStore from "../zustand/useAuthStore";
 
 const useLogout = () => {
     const [loading, setLoading] = useState(false);
@@ -8,25 +8,32 @@ const useLogout = () => {
 
     const logout = async () => {
         setLoading(true);
+
         try {
             const res = await fetch("/api/auth/logout", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include", // REQUIRED for cookies
             });
-            const data = await res.json();
-            if (data.error) {
-                throw new Error(data.error);
-            }
 
-            localStorage.removeItem("chat-user");
-            setAuthUser(null);
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || data.error || "Logout failed");
+            }
         } catch (error) {
             toast.error(error.message);
         } finally {
+            // Always clean up client state
+            localStorage.removeItem("chat-user");
+            setAuthUser(null);
             setLoading(false);
         }
     };
 
     return { loading, logout };
 };
+
 export default useLogout;
